@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+spec:
+  volumes:
+  - name: html-volume
+    emptyDir: {}
+  initContainers:
+  - name: init-container
+    image: curlimages/curl:latest
+    command:
+    - sh
+    - -c
+    - curl -o /usr/share/nginx/html/index.html https://raw.githubusercontent.com/mohamedgaber353/practice_ass/main/index.html
+    volumeMounts:
+    - name: html-volume
+      mountPath: /usr/share/nginx/html
+  containers:
+  - name: nginx-container
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: html-volume
+      mountPath: /usr/share/nginx/html
